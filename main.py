@@ -3,10 +3,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import *
 
-class webBrowser(QMainWindow):
+class webBrowser():
 
-    def __init__(self, *args, **kwargs):
-        super(webBrowser, self).__init__(*args, **kwargs)
+    def __init__(self):
 
         self.window = QWidget()
         self.window.setWindowTitle("ABM Internet Browser")
@@ -32,6 +31,11 @@ class webBrowser(QMainWindow):
         self.horizontal.addWidget(self.forBtn)
 
         self.browser = QWebEngineView()
+
+        self.exeBtn.clicked.connect(lambda: self.navigate(self.urlBar.toPlainText()))
+        self.backBtn.clicked.connect(self.browser.back)
+        self.forBtn.clicked.connect(self.browser.forward)
+
         self.layout.addLayout(self.horizontal)
         self.layout.addWidget(self.browser)
 
@@ -39,6 +43,12 @@ class webBrowser(QMainWindow):
 
         self.window.setLayout(self.layout)
         self.window.show()
+
+    def navigate(self, url):
+        if not url.startswith("http"):
+            url = "http://" + url
+            self.urlBar.setText(url)
+        self.browser.setUrl(QUrl(url))
 
 app = QApplication([])
 window = webBrowser()
